@@ -298,7 +298,8 @@ class JdTdudfp:
         try:
             from pyppeteer import launch
             url = "https://www.jd.com/"
-            browser = await launch(userDataDir=".user_data", autoClose=True,
+            # chromium浏览器多开页面卡死问题，解决这个问题的方法就是浏览器初始化的时候添加’dumpio’:True
+            browser = await launch(userDataDir=".user_data", autoClose=True, dumpio=True,
                                    args=['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox'])
             page = await browser.newPage()
             # 有些页面打开慢，这里设置时间长一点，360秒
@@ -366,7 +367,7 @@ class JdSeckill(object):
 
         # 初始化信息
         self.sku_id = global_config.getRaw('config', 'sku_id')
-        self.seckill_num = 2
+        self.seckill_num = int(global_config.getRaw('config', 'seckill_num'))
         self.seckill_init_info = dict()
         self.seckill_url = dict()
         self.seckill_order_data = dict()
